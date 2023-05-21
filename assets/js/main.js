@@ -226,4 +226,60 @@
    */
   new PureCounter();
 
+
+
+// Import the OpenAI API library
+const openai = require('openai');
+
+// Set the OpenAI API key
+openai.apiKey = process.env.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;
+
+// Create a chat request function
+const createChatRequest = (name, businessName, businessTagline, businessDescription, itemsSold) => {
+  return {
+    model: 'gpt-3.5-turbo',
+    messages: [
+      {
+        role: 'system',
+        content: `Hello, ${name}. How can I help you with your business, ${businessName}?`
+      },
+      {
+        role: 'user',
+        content: `I'm looking for information on ${businessTagline}.`
+      }
+    ],
+    temperature: 1.0,
+    max_tokens: 4000,
+    frequency_penalty: 0,
+    presence_penalty: 0,
+  };
+};
+
+// Create a chat function
+const chat = (name, businessName, businessTagline, businessDescription, itemsSold) => {
+  // Create a chat request
+  const chatRequest = createChatRequest(name, businessName, businessTagline, businessDescription, itemsSold);
+
+  // Send the chat request
+  const chatResponse = await openai.chat(chatRequest);
+
+  // Get the response message
+  const responseMessage = chatResponse.choices[0].message.content;
+
+  // Display the response message
+  document.getElementById('chat').innerHTML = responseMessage;
+};
+
+// When the form is submitted, call the chat function
+document.getElementById('submit').addEventListener('click', () => {
+  const name = document.getElementById('name').value;
+  const businessName = document.getElementById('business_name').value;
+  const businessTagline = document.getElementById('business_tagline').value;
+  const businessDescription = document.getElementById('business_description').value;
+  const itemsSold = document.getElementById('items_sold').value;
+
+  chat(name, businessName, businessTagline, businessDescription, itemsSold);
+});
+
+
 })()
